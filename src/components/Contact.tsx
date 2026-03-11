@@ -15,7 +15,7 @@ export default function Contact({ content }: { content: SiteContent }) {
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         <span className="text-coral-400 font-semibold text-sm uppercase tracking-widest">
-          Reserveren
+          Contact
         </span>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mt-3 mb-6 bg-gradient-to-r from-white to-ocean-200 bg-clip-text text-transparent">
           {contact.title}

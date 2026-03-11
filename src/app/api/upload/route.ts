@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+const EXT_MAP: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+  "image/gif": ".gif",
+};
+
+const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,12 +48,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Ensure uploads directory exists
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const base64 = buffer.toString("base64");
-    const dataUrl = `data:${file.type};base64,${base64}`;
+    const hash = crypto.createHash("md5").update(buffer).digest("hex").slice(0, 8);
+    const ext = EXT_MAP[file.type] || ".jpg";
+    const filename = `${Date.now()}-${hash}${ext}`;
+    const filePath = path.join(UPLOADS_DIR, filename);
 
-    return NextResponse.json({ src: dataUrl });
+    fs.writeFileSync(filePath, buffer);
+
+    return NextResponse.json({ src: `/uploads/${filename}` });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Upload error:", message);

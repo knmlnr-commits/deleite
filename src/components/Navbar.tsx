@@ -48,7 +48,7 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#contact"
+            href="#boeken"
             className="bg-coral-500 hover:bg-coral-600 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-105 shadow-lg shadow-coral-500/30"
           >
             Boek nu
@@ -85,7 +85,7 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#contact"
+            href="#boeken"
             onClick={() => setMenuOpen(false)}
             className="block mt-4 bg-coral-500 text-white text-center px-5 py-3 rounded-full font-semibold"
           >
