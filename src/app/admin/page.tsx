@@ -23,14 +23,23 @@ export default function AdminPage() {
   async function save() {
     if (!content) return;
     setSaving(true);
-    await fetch("/api/content", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(content),
-    });
+    try {
+      const res = await fetch("/api/content", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(content),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setUploadError(data.error || "Opslaan mislukt");
+      } else {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch {
+      setUploadError("Opslaan mislukt. Controleer je internetverbinding.");
+    }
     setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
   }
 
   async function uploadImage() {

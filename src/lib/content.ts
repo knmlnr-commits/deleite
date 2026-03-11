@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-const CONTENT_FILE = path.join(process.cwd(), "content", "site.json");
+const BUNDLED_CONTENT_FILE = path.join(process.cwd(), "content", "site.json");
+const TMP_CONTENT_FILE = "/tmp/site-content.json";
 
 export interface SiteContent {
   hero: {
@@ -38,11 +39,20 @@ export interface SiteContent {
   };
 }
 
+function getContentPath(): string {
+  // Use /tmp copy if it exists (previously saved), otherwise use bundled file
+  if (fs.existsSync(TMP_CONTENT_FILE)) {
+    return TMP_CONTENT_FILE;
+  }
+  return BUNDLED_CONTENT_FILE;
+}
+
 export function getContent(): SiteContent {
-  const raw = fs.readFileSync(CONTENT_FILE, "utf-8");
+  const raw = fs.readFileSync(getContentPath(), "utf-8");
   return JSON.parse(raw);
 }
 
 export function saveContent(content: SiteContent): void {
-  fs.writeFileSync(CONTENT_FILE, JSON.stringify(content, null, 2));
+  // Always write to /tmp since the bundled path is likely read-only
+  fs.writeFileSync(TMP_CONTENT_FILE, JSON.stringify(content, null, 2));
 }

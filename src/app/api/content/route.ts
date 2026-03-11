@@ -7,7 +7,16 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  const body = await request.json();
-  saveContent(body);
-  return NextResponse.json({ success: true });
+  try {
+    const body = await request.json();
+    saveContent(body);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Content save error:", message);
+    return NextResponse.json(
+      { error: `Opslaan mislukt: ${message}` },
+      { status: 500 }
+    );
+  }
 }
