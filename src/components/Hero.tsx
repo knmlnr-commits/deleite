@@ -1,23 +1,54 @@
 "use client";
 
 import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
 import { SiteContent } from "@/lib/content";
 
 export default function Hero({ content }: { content: SiteContent }) {
   const { hero } = content;
 
+  // Collect all available hero images (new array field + legacy single image)
+  const images: string[] = hero.images?.length
+    ? hero.images
+    : hero.image
+      ? [hero.image]
+      : [];
+
+  const [current, setCurrent] = useState(0);
+
+  const next = useCallback(() => {
+    setCurrent((c) => (c + 1) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = setInterval(next, 6000);
+    return () => clearInterval(timer);
+  }, [images.length, next]);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image */}
-      {hero.image ? (
-        <Image
-          src={hero.image}
-          alt={hero.title}
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
+      {/* Background images with slow pan (Ken Burns) */}
+      {images.length > 0 ? (
+        images.map((src, i) => (
+          <div
+            key={src}
+            className="absolute inset-0 transition-opacity duration-[2000ms] ease-in-out"
+            style={{ opacity: i === current ? 1 : 0 }}
+          >
+            <Image
+              src={src}
+              alt={`${hero.title} ${i + 1}`}
+              fill
+              priority={i === 0}
+              className="object-cover animate-slow-pan"
+              sizes="100vw"
+              style={{
+                animationDelay: `${i * -8}s`,
+              }}
+            />
+          </div>
+        ))
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-ocean-900 via-ocean-800 to-ocean-700" />
       )}
@@ -73,6 +104,22 @@ export default function Hero({ content }: { content: SiteContent }) {
             Neem contact op
           </a>
         </div>
+
+        {/* Slide indicators */}
+        {images.length > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-12">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === current ? "w-8 bg-coral-400" : "w-2 bg-white/40 hover:bg-white/60"
+                }`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">

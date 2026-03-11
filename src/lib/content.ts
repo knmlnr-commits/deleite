@@ -11,6 +11,7 @@ export interface SiteContent {
     tagline: string;
     description: string;
     image?: string;
+    images?: string[];
   };
   property: {
     name: string;

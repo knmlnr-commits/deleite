@@ -61,7 +61,7 @@ export default function Contact({ content }: { content: SiteContent }) {
 
         {/* Big WhatsApp CTA */}
         <a
-          href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent("Hoi! Ik ben geïnteresseerd in Casa Deleite. Is het beschikbaar?")}`}
+          href={`https://wa.me/${contact.whatsapp}?text=${encodeURIComponent("Hoi! Ik ben geïnteresseerd in Vila Deleite. Is het beschikbaar?")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-10 py-5 rounded-full text-xl font-bold transition-all hover:scale-105 shadow-xl shadow-green-600/30"

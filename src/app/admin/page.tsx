@@ -75,23 +75,40 @@ export default function AdminPage() {
     setUploadError(null);
 
     try {
-      const file = heroFileRef.current.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data = await res.json();
-      if (!res.ok) {
-        setUploadError(data.error || "Upload mislukt");
-      } else {
-        content.hero.image = data.src;
-        setContent({ ...content });
+      const files = Array.from(heroFileRef.current.files);
+      if (!content.hero.images) content.hero.images = [];
+
+      for (const file of files) {
+        if (content.hero.images.length >= 3) {
+          setUploadError("Maximaal 3 hero afbeeldingen.");
+          break;
+        }
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (!res.ok) {
+          setUploadError(data.error || "Upload mislukt");
+          break;
+        }
+        content.hero.images.push(data.src);
       }
+      // Keep legacy field in sync
+      content.hero.image = content.hero.images[0] || "";
+      setContent({ ...content });
     } catch {
       setUploadError("Upload mislukt. Controleer je internetverbinding.");
     }
 
     if (heroFileRef.current) heroFileRef.current.value = "";
     setUploading(false);
+  }
+
+  function removeHeroImage(index: number) {
+    if (!content || !content.hero.images) return;
+    content.hero.images.splice(index, 1);
+    content.hero.image = content.hero.images[0] || "";
+    setContent({ ...content });
   }
 
   function removeImage(index: number) {
@@ -156,7 +173,7 @@ export default function AdminPage() {
               &larr; Terug naar site
             </a>
             <h1 className="text-xl font-bold">
-              <span className="text-sky-400">CMS</span> — Casa Deleite
+              <span className="text-sky-400">CMS</span> — Vila Deleite
             </h1>
           </div>
           <button
@@ -203,36 +220,50 @@ export default function AdminPage() {
         {activeTab === "hero" && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold mb-6">Hero sectie</h2>
-            {/* Hero image upload */}
+            {/* Hero images upload (up to 3, slideshow) */}
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">Achtergrond afbeelding</label>
-              {content.hero.image ? (
-                <div className="relative rounded-xl overflow-hidden mb-3">
-                  <div className="relative aspect-[21/9]">
-                    <Image src={content.hero.image} alt="Hero" fill className="object-cover" sizes="800px" />
-                  </div>
-                  <button
-                    onClick={() => { content.hero.image = ""; setContent({...content}); }}
-                    className="absolute top-3 right-3 bg-red-500/80 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
-                  >
-                    Verwijderen
-                  </button>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+                Achtergrond afbeeldingen (max 3 — worden als slideshow getoond)
+              </label>
+              {(content.hero.images?.length ?? 0) > 0 && (
+                <div className="grid grid-cols-3 gap-3 mb-3">
+                  {content.hero.images!.map((src, i) => (
+                    <div key={i} className="relative rounded-xl overflow-hidden group">
+                      <div className="relative aspect-[16/9]">
+                        <Image src={src} alt={`Hero ${i + 1}`} fill className="object-cover" sizes="300px" />
+                      </div>
+                      <button
+                        onClick={() => removeHeroImage(i)}
+                        className="absolute top-2 right-2 bg-red-500/80 hover:bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                      <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                        {i + 1} / 3
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ) : null}
+              )}
               <input
                 ref={heroFileRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={uploadHeroImage}
                 className="hidden"
                 id="hero-upload"
               />
-              <label
-                htmlFor="hero-upload"
-                className="inline-block cursor-pointer bg-gray-800 hover:bg-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
-              >
-                {uploading ? "Uploaden..." : content.hero.image ? "Andere afbeelding kiezen" : "Afbeelding uploaden"}
-              </label>
+              {(content.hero.images?.length ?? 0) < 3 && (
+                <label
+                  htmlFor="hero-upload"
+                  className="inline-block cursor-pointer bg-gray-800 hover:bg-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                >
+                  {uploading ? "Uploaden..." : `Afbeelding${(content.hero.images?.length ?? 0) > 0 ? " toevoegen" : "en uploaden"} (${content.hero.images?.length ?? 0}/3)`}
+                </label>
+              )}
             </div>
             <Field label="Titel" value={content.hero.title} onChange={(v) => update("hero.title", v)} />
             <Field label="Ondertitel" value={content.hero.subtitle} onChange={(v) => update("hero.subtitle", v)} />

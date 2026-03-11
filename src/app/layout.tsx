@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Casa Deleite — Fuerteventura Vakantieverhuur",
+  title: "Vila Deleite — Fuerteventura Vakantieverhuur",
   description:
     "Luxe vakantiehuis in Corralejo, Fuerteventura. Surf, zon en vrijheid. Boek nu je droomvakantie aan de kust.",
   keywords: "Fuerteventura, vakantieverhuur, Corralejo, surfen, vakantiehuis, Canarische Eilanden",

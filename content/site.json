@@ -1,13 +1,13 @@
 {
   "hero": {
-    "title": "Casa Deleite",
+    "title": "Vila Deleite",
     "subtitle": "Fuerteventura",
     "tagline": "Surf. Zon. Vrijheid.",
     "description": "Jouw droomvakantie begint hier — een prachtige villa in Lajares, Fuerteventura. Privézwembad, eindeloze stranden en pure ontspanning.",
     "image": "/uploads/hero-pool.jpg"
   },
   "property": {
-    "name": "Casa Deleite",
+    "name": "Vila Deleite",
     "location": "Lajares, Fuerteventura",
     "bedrooms": 3,
     "bathrooms": 2,
@@ -24,7 +24,7 @@
   },
   "about": {
     "title": "Over het huis",
-    "text": "Casa Deleite is meer dan een vakantiehuis — het is een ervaring. Gelegen in het bruisende Corralejo, omringd door turquoise water en vulkanische landschappen. Of je nu komt om te surfen, te ontspannen of het eiland te verkennen, dit is je perfecte thuisbasis.",
+    "text": "Vila Deleite is meer dan een vakantiehuis — het is een ervaring. Gelegen in het bruisende Corralejo, omringd door turquoise water en vulkanische landschappen. Of je nu komt om te surfen, te ontspannen of het eiland te verkennen, dit is je perfecte thuisbasis.",
     "features": [
       { "icon": "waves", "title": "Aan zee", "text": "Op loopafstand van de mooiste stranden en surfspots." },
       { "icon": "sun", "title": "Altijd zon", "text": "330+ zonnige dagen per jaar. Fuerteventura is het Hawaii van Europa." },
@@ -33,13 +33,13 @@
     ]
   },
   "gallery": {
-    "title": "Ontdek Casa Deleite",
+    "title": "Ontdek Vila Deleite",
     "images": []
   },
   "contact": {
     "title": "Boek je verblijf",
     "text": "Neem contact op voor beschikbaarheid en prijzen. We helpen je graag!",
-    "email": "info@casadeleite.com",
+    "email": "info@viladeleite.com",
     "phone": "+34 600 000 000",
     "whatsapp": "+34600000000"
   }
