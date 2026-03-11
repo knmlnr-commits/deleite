@@ -1,0 +1,9 @@
+{
+  "pricing": {
+    "perNight": 150,
+    "cleaningFee": 75,
+    "minNights": 3
+  },
+  "blocked": [],
+  "bookings": []
+}

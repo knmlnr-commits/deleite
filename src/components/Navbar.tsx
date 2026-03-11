@@ -17,6 +17,7 @@ export default function Navbar() {
     { href: "#over", label: "Over" },
     { href: "#gallerij", label: "Gallerij" },
     { href: "#details", label: "Het huis" },
+    { href: "#boeken", label: "Boeken" },
     { href: "#contact", label: "Contact" },
   ];
 

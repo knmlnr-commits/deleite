@@ -7,6 +7,7 @@ import About from "./About";
 import Gallery from "./Gallery";
 import PropertyDetails from "./PropertyDetails";
 import Contact from "./Contact";
+import BookingSection from "./BookingSection";
 
 export default function HomeContent({ initialContent }: { initialContent: SiteContent }) {
   const [content, setContent] = useState(initialContent);
@@ -24,6 +25,7 @@ export default function HomeContent({ initialContent }: { initialContent: SiteCo
       <About content={content} />
       <Gallery content={content} />
       <PropertyDetails content={content} />
+      <BookingSection />
       <Contact content={content} />
     </>
   );

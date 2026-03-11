@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { SiteContent } from "@/lib/content";
 import Image from "next/image";
+import AdminBookings from "@/components/AdminBookings";
 
 export default function AdminPage() {
   const [content, setContent] = useState<SiteContent | null>(null);
@@ -161,6 +162,7 @@ export default function AdminPage() {
     { id: "property", label: "Huis" },
     { id: "gallery", label: "Gallerij" },
     { id: "contact", label: "Contact" },
+    { id: "bookings", label: "Boekingen" },
   ];
 
   return (
@@ -408,6 +410,9 @@ export default function AdminPage() {
             <Field label="WhatsApp nummer (zonder +)" value={content.contact.whatsapp} onChange={(v) => update("contact.whatsapp", v)} />
           </div>
         )}
+
+        {/* Bookings tab */}
+        {activeTab === "bookings" && <AdminBookings />}
       </div>
     </div>
   );
