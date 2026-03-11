@@ -9,6 +9,7 @@ export interface SiteContent {
     subtitle: string;
     tagline: string;
     description: string;
+    image?: string;
   };
   property: {
     name: string;

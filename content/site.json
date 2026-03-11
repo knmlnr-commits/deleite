@@ -3,11 +3,12 @@
     "title": "Casa Deleite",
     "subtitle": "Fuerteventura",
     "tagline": "Surf. Zon. Vrijheid.",
-    "description": "Jouw droomvakantie begint hier — een prachtig huis direct aan de kust van Fuerteventura. Perfecte golven, eindeloze stranden en pure ontspanning."
+    "description": "Jouw droomvakantie begint hier — een prachtige villa in Lajares, Fuerteventura. Privézwembad, eindeloze stranden en pure ontspanning.",
+    "image": "/uploads/hero-pool.jpg"
   },
   "property": {
     "name": "Casa Deleite",
-    "location": "Corralejo, Fuerteventura",
+    "location": "Lajares, Fuerteventura",
     "bedrooms": 3,
     "bathrooms": 2,
     "guests": 6,

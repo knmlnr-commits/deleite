@@ -11,6 +11,7 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false);
   const [activeTab, setActiveTab] = useState("hero");
   const fileRef = useRef<HTMLInputElement>(null);
+  const heroFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("/api/content")
@@ -46,6 +47,20 @@ export default function AdminPage() {
 
     setContent({ ...content });
     fileRef.current.value = "";
+    setUploading(false);
+  }
+
+  async function uploadHeroImage() {
+    if (!heroFileRef.current?.files?.length || !content) return;
+    setUploading(true);
+    const file = heroFileRef.current.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
+    const { src } = await res.json();
+    content.hero.image = src;
+    setContent({ ...content });
+    heroFileRef.current.value = "";
     setUploading(false);
   }
 
@@ -150,6 +165,37 @@ export default function AdminPage() {
         {activeTab === "hero" && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold mb-6">Hero sectie</h2>
+            {/* Hero image upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">Achtergrond afbeelding</label>
+              {content.hero.image ? (
+                <div className="relative rounded-xl overflow-hidden mb-3">
+                  <div className="relative aspect-[21/9]">
+                    <Image src={content.hero.image} alt="Hero" fill className="object-cover" sizes="800px" />
+                  </div>
+                  <button
+                    onClick={() => { content.hero.image = ""; setContent({...content}); }}
+                    className="absolute top-3 right-3 bg-red-500/80 hover:bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Verwijderen
+                  </button>
+                </div>
+              ) : null}
+              <input
+                ref={heroFileRef}
+                type="file"
+                accept="image/*"
+                onChange={uploadHeroImage}
+                className="hidden"
+                id="hero-upload"
+              />
+              <label
+                htmlFor="hero-upload"
+                className="inline-block cursor-pointer bg-gray-800 hover:bg-gray-700 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors"
+              >
+                {uploading ? "Uploaden..." : content.hero.image ? "Andere afbeelding kiezen" : "Afbeelding uploaden"}
+              </label>
+            </div>
             <Field label="Titel" value={content.hero.title} onChange={(v) => update("hero.title", v)} />
             <Field label="Ondertitel" value={content.hero.subtitle} onChange={(v) => update("hero.subtitle", v)} />
             <Field label="Tagline" value={content.hero.tagline} onChange={(v) => update("hero.tagline", v)} />
