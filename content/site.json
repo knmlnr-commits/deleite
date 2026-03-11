@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "title": "Casa Deleite",
+    "subtitle": "Fuerteventura",
+    "tagline": "Surf. Zon. Vrijheid.",
+    "description": "Jouw droomvakantie begint hier — een prachtig huis direct aan de kust van Fuerteventura. Perfecte golven, eindeloze stranden en pure ontspanning."
+  },
+  "property": {
+    "name": "Casa Deleite",
+    "location": "Corralejo, Fuerteventura",
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "guests": 6,
+    "description": "Een stijlvol en comfortabel vakantiehuis op loopafstand van de beste surfspots en stranden van Fuerteventura. Met een privézwembad, ruim terras en adembenemend uitzicht op de oceaan.",
+    "highlights": [
+      "Privézwembad met zeezicht",
+      "5 minuten lopen naar het strand",
+      "Volledig uitgeruste keuken",
+      "Gratis WiFi & Netflix",
+      "Surfboard opslag",
+      "BBQ terras met zonsondergang view"
+    ]
+  },
+  "about": {
+    "title": "Over het huis",
+    "text": "Casa Deleite is meer dan een vakantiehuis — het is een ervaring. Gelegen in het bruisende Corralejo, omringd door turquoise water en vulkanische landschappen. Of je nu komt om te surfen, te ontspannen of het eiland te verkennen, dit is je perfecte thuisbasis.",
+    "features": [
+      { "icon": "waves", "title": "Aan zee", "text": "Op loopafstand van de mooiste stranden en surfspots." },
+      { "icon": "sun", "title": "Altijd zon", "text": "330+ zonnige dagen per jaar. Fuerteventura is het Hawaii van Europa." },
+      { "icon": "surfboard", "title": "Surf paradise", "text": "Wereldklasse golven voor beginners en experts. Surfscholen vlakbij." },
+      { "icon": "palm", "title": "Pure vibes", "text": "Ontspan bij het zwembad, geniet van de BBQ bij zonsondergang." }
+    ]
+  },
+  "gallery": {
+    "title": "Ontdek Casa Deleite",
+    "images": []
+  },
+  "contact": {
+    "title": "Boek je verblijf",
+    "text": "Neem contact op voor beschikbaarheid en prijzen. We helpen je graag!",
+    "email": "info@casadeleite.com",
+    "phone": "+34 600 000 000",
+    "whatsapp": "+34600000000"
+  }
+}
