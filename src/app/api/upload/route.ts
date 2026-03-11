@@ -13,7 +13,20 @@ const EXT_MAP: Record<string, string> = {
   "image/gif": ".gif",
 };
 
-const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
+const PUBLIC_UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
+const TMP_UPLOADS_DIR = "/tmp/uploads";
+
+function getWritableDir(): string {
+  // Try public/uploads first (development), fall back to /tmp/uploads (production)
+  try {
+    fs.mkdirSync(PUBLIC_UPLOADS_DIR, { recursive: true });
+    fs.accessSync(PUBLIC_UPLOADS_DIR, fs.constants.W_OK);
+    return PUBLIC_UPLOADS_DIR;
+  } catch {
+    fs.mkdirSync(TMP_UPLOADS_DIR, { recursive: true });
+    return TMP_UPLOADS_DIR;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,19 +61,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Ensure uploads directory exists
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-
+    const uploadsDir = getWritableDir();
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const hash = crypto.createHash("md5").update(buffer).digest("hex").slice(0, 8);
     const ext = EXT_MAP[file.type] || ".jpg";
     const filename = `${Date.now()}-${hash}${ext}`;
-    const filePath = path.join(UPLOADS_DIR, filename);
 
-    fs.writeFileSync(filePath, buffer);
+    fs.writeFileSync(path.join(uploadsDir, filename), buffer);
 
-    return NextResponse.json({ src: `/uploads/${filename}` });
+    // Always return the API route URL so it works in both dev and prod
+    return NextResponse.json({ src: `/api/uploads/${filename}` });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Upload error:", message);
