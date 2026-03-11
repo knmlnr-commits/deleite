@@ -9,6 +9,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("hero");
   const fileRef = useRef<HTMLInputElement>(null);
   const heroFileRef = useRef<HTMLInputElement>(null);
@@ -35,32 +36,52 @@ export default function AdminPage() {
   async function uploadImage() {
     if (!fileRef.current?.files?.length || !content) return;
     setUploading(true);
+    setUploadError(null);
 
-    const files = Array.from(fileRef.current.files);
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const { src } = await res.json();
-      content.gallery.images.push({ src, alt: file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ") });
+    try {
+      const files = Array.from(fileRef.current.files);
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (!res.ok) {
+          setUploadError(data.error || "Upload mislukt");
+          break;
+        }
+        content.gallery.images.push({ src: data.src, alt: file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ") });
+      }
+      setContent({ ...content });
+    } catch {
+      setUploadError("Upload mislukt. Controleer je internetverbinding.");
     }
 
-    setContent({ ...content });
-    fileRef.current.value = "";
+    if (fileRef.current) fileRef.current.value = "";
     setUploading(false);
   }
 
   async function uploadHeroImage() {
     if (!heroFileRef.current?.files?.length || !content) return;
     setUploading(true);
-    const file = heroFileRef.current.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: formData });
-    const { src } = await res.json();
-    content.hero.image = src;
-    setContent({ ...content });
-    heroFileRef.current.value = "";
+    setUploadError(null);
+
+    try {
+      const file = heroFileRef.current.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) {
+        setUploadError(data.error || "Upload mislukt");
+      } else {
+        content.hero.image = data.src;
+        setContent({ ...content });
+      }
+    } catch {
+      setUploadError("Upload mislukt. Controleer je internetverbinding.");
+    }
+
+    if (heroFileRef.current) heroFileRef.current.value = "";
     setUploading(false);
   }
 
@@ -144,6 +165,14 @@ export default function AdminPage() {
       </header>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Upload error */}
+        {uploadError && (
+          <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 px-5 py-3 rounded-lg flex items-center justify-between">
+            <span>{uploadError}</span>
+            <button onClick={() => setUploadError(null)} className="text-red-400 hover:text-red-300 ml-4 font-bold">&times;</button>
+          </div>
+        )}
+
         {/* Tabs */}
         <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
           {tabs.map((tab) => (
