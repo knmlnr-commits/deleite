@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir, access, constants } from "fs/promises";
-import path from "path";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
@@ -40,29 +38,10 @@ export async function POST(request: NextRequest) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const base64 = buffer.toString("base64");
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
-    const ext = path.extname(file.name) || ".jpg";
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-
-    // Ensure uploads directory exists
-    await mkdir(uploadsDir, { recursive: true });
-
-    // Check write permission
-    try {
-      await access(uploadsDir, constants.W_OK);
-    } catch {
-      console.error("No write permission to:", uploadsDir);
-      return NextResponse.json(
-        { error: `Geen schrijfrechten op uploads map: ${uploadsDir}` },
-        { status: 500 }
-      );
-    }
-
-    const filepath = path.join(uploadsDir, filename);
-    await writeFile(filepath, buffer);
-
-    return NextResponse.json({ src: `/uploads/${filename}` });
+    return NextResponse.json({ src: dataUrl });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("Upload error:", message);
